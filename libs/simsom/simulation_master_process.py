@@ -43,6 +43,8 @@ def propagate_message(user_index: int, users: list) -> None:
 
     target = users[user_index]
     for friend_uid in target.friends:
+        # if users[friend_uid].is_logged: ... # for future implementations
+        target.last_message.exposure_track.append(friend_uid)
         users[friend_uid].user_feed.appendleft(target.last_message)
 
 
@@ -83,6 +85,7 @@ def simulation_master(
         comm_world.send(users[index], dest=i)
         index += 1
         index = index % len(users)
+    # Why this is out of the main while?
 
     while True:
         # send termination signal when all the processes are done.
@@ -140,3 +143,8 @@ def simulation_master(
 
     log_msg = f"[{str(datetime.datetime.now())}] -> Closed SIMULATION MASTER process @ RANK {rank})."
     print(log_msg, flush=True)
+
+    print(
+        "[DEBUG] exposure track for user 42:",
+        users[42].shared_messages[-1].exposure_track,
+    )

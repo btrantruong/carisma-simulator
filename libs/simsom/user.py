@@ -83,6 +83,7 @@ class User:
         )
         message_reshared.quality = target.quality
         message_reshared.appeal = target.appeal
+        message_reshared.exposure_track = target.exposure_track  # Exposure track ref
         # If it's not the first reshare we get the attributes
         if pd.notna(target.reshared_id):
             message_reshared.reshared_original_id = target.reshared_original_id

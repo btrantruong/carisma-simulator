@@ -12,6 +12,7 @@ class Message:
     def __init__(
         self, id: int, user_id: int, quality_params: tuple, topic: int, is_shadow: bool
     ) -> None:
+        self.exposure_track = []  # Contain the track of users that seen this message
         self.id = id
         self.user_id = user_id
         self.quality_params = quality_params
