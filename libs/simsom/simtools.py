@@ -82,6 +82,7 @@ def file_manager(folder_path, file_path) -> None:
                     "reshared_id",
                     "reshared_user_id",
                     "reshared_original_id",
+                    "exposure_track",
                     "clock_time",
                 ]
             )

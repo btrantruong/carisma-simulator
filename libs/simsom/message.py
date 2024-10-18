@@ -117,5 +117,6 @@ class Message:
             self.reshared_id,
             self.reshared_user_id,
             self.reshared_original_id,
+            self.exposure_track,
             self.time,
         )
