@@ -1,3 +1,7 @@
+"""
+Reponsible for monitoring the convergence of the simulation.
+Send termination signal to all processes when the simulation has converged.
+"""
 from mpi4py import MPI
 
 

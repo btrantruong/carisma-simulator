@@ -11,7 +11,14 @@ class Agent:
         self.repost_counter = 0
 
     def make_actions(self, min_actions=0, max_actions=4, cut_off=15):
+        """
+        Perform an action that could be a post or a repost.
+        TODO: remove min, max, port from old code
+        Args:
 
+        Returns:
+            list of Message obj: the list of messages that the agent produced
+        """
         actions = []
 
         for _ in range(rnd.randint(min_actions, max_actions)):

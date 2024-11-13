@@ -1,3 +1,8 @@
+# TODO: Can we change the name to `agent_process`? 
+
+"""
+An agent receives inventory of messages from the agent_pool_manager and post/repost messages that will be shown to their followers
+"""
 from mpi4py import MPI
 
 
@@ -17,7 +22,7 @@ def run_agent_handler(
     comm_world.Barrier()
 
     while True:
-
+        # Receive package that contains (friend ids, messages) from agent_pool_manager
         # Wait for agent pack to process
         agent_pack = comm_world.recv(
             source=rank_index["agent_pool_manager"],
@@ -30,6 +35,7 @@ def run_agent_handler(
         # Unpack the agent + incoming messages
         agent, in_messages = agent_pack
 
+        # in_messages: inventory
         # Add in_messages to newsfeed
         agent.newsfeed = in_messages + agent.newsfeed
 

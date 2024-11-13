@@ -3,6 +3,7 @@ import random as rnd
 import copy
 from agent import Agent
 
+#TODO: save to file 
 
 def generate_follower_count(max_followers=100):
 
@@ -14,6 +15,7 @@ def generate_follower_count(max_followers=100):
 
 
 def batch_message_propagation(message_board, agent, messages):
+    # TODO: pls explain 
     batch_size = 1000
     for i in range(0, len(agent.followers), batch_size):
         follower_batch = agent.followers[i : i + batch_size]
@@ -28,7 +30,12 @@ def run_data_manager(
     size: int,
     rank_index: dict,
 ):
-
+    """
+    We're confusion 
+    - b_size: batch size? 
+    - message_count_target
+    """
+    #TODO: move initialization to `simsom` (probably)
     # Example sim params
     num_agents = 1000
     message_count_target = 10000
@@ -63,7 +70,7 @@ def run_data_manager(
 
         # Unpicked agents count
         n_agents = len(agents)
-
+        #TODO: how about n_agents < b_size ?
         if n_agents >= b_size:
 
             agent_packs_batch = []
@@ -89,6 +96,7 @@ def run_data_manager(
 
         # Handlers harvesting
         returned_agents = 0
+        # TODO: pls explain this condition
         while returned_agents < b_size:
 
             # Scan once all the handlers for an agent that completed
@@ -126,6 +134,7 @@ def run_data_manager(
                             )
                         )
                         # NOTE: I'm storing all the messages produced paired with the real creation timestamp
+                        # TODO: change this to distribution time 
 
         # Check if batch correctly transmitted
         if batch_send_req:
