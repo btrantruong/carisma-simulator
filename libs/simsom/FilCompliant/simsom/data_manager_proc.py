@@ -3,7 +3,8 @@ import random as rnd
 import copy
 from agent import Agent
 
-#TODO: save to file 
+# TODO: save to file
+
 
 def generate_follower_count(max_followers=100):
 
@@ -14,14 +15,20 @@ def generate_follower_count(max_followers=100):
     return min(int(x_min * (1 - r) ** (-1 / (alpha - 1))), max_followers)
 
 
-def batch_message_propagation(message_board, agent, messages):
-    # TODO: pls explain 
+def batch_message_propagation(message_board: dict, agent: Agent, messages: list):
+    # TODO: pls explain
+    # Explanation: this code is a reminder for the high follower spreading problem (this implementation is a stub).
+    # As the simulation size grow, users with lots of follower (power law) can require lot of time for spreading.
     batch_size = 1000
     for i in range(0, len(agent.followers), batch_size):
         follower_batch = agent.followers[i : i + batch_size]
         for m in messages:
             for follower_aid in follower_batch:
                 message_board[follower_aid].append(copy.deepcopy(m))
+    # NOTE: an equivalent (and more simple) implementation could be:
+    # for follower_aid in agent.followers:
+    #     for m in messages:
+    #         message_board[follower_aid].append(copy.deepcopy(m))
 
 
 def run_data_manager(
@@ -31,11 +38,11 @@ def run_data_manager(
     rank_index: dict,
 ):
     """
-    We're confusion 
-    - b_size: batch size? 
-    - message_count_target
+    We're confusion
+    - b_size: batch size? # Yes
+    - message_count_target # The target number of message to generate for a run (is to have a stopping criterion)
     """
-    #TODO: move initialization to `simsom` (probably)
+    # TODO: move initialization to `simsom` (probably)
     # Example sim params
     num_agents = 1000
     message_count_target = 10000
@@ -70,7 +77,7 @@ def run_data_manager(
 
         # Unpicked agents count
         n_agents = len(agents)
-        #TODO: how about n_agents < b_size ?
+        # TODO: how about n_agents < b_size ? # It's unlikely but in that case b_size should be resized to n_agents
         if n_agents >= b_size:
 
             agent_packs_batch = []
@@ -97,6 +104,9 @@ def run_data_manager(
         # Handlers harvesting
         returned_agents = 0
         # TODO: pls explain this condition
+        # Explanation: here we are gathering processed agents from the agent processes.
+        # While you don't have exactly the same amount of agents you sent in the batch,
+        # the loop won't stop to collect agents. This ensure to not empty the agent structure.
         while returned_agents < b_size:
 
             # Scan once all the handlers for an agent that completed
@@ -134,7 +144,7 @@ def run_data_manager(
                             )
                         )
                         # NOTE: I'm storing all the messages produced paired with the real creation timestamp
-                        # TODO: change this to distribution time 
+                        # TODO: change this to distribution time
 
         # Check if batch correctly transmitted
         if batch_send_req:

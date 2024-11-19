@@ -1,4 +1,4 @@
-# TODO: Can we change the name to `agent_process`? 
+# TODO: Can we change the name to `agent_process`? # Yes
 
 """
 An agent receives inventory of messages from the agent_pool_manager and post/repost messages that will be shown to their followers
