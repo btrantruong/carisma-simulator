@@ -149,7 +149,7 @@ def run_data_manager(
                     user_index = rnd.choice(range(n_users - i))
                     picked_user = users.pop(user_index)
                     # Get the incoming messages and pack
-                    user_pack = (picked_user, incoming_messages[picked_user.uid])
+                    user_pack = (picked_user, incoming_messages[picked_user.uid], clock.current_time)
                     # Add it to the batch
                     users_packs_batch.append(user_pack)
                     # Flush incoming messages

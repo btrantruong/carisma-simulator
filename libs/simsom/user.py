@@ -36,9 +36,11 @@ class User:
         for _ in range(random.randrange(1, 6)):
             user_description.append(random.randrange(0, 5))
         self.user_description = list(set(user_description))
+        self.bad_message_posting = False
         self.is_flagged = False
         self.flagged_time = 0
         self.is_suspended = False
+        self.suspended_time = 0
         self.sus_strike_count = 0
         self.is_terminated = False
         self.is_shadow = False
@@ -136,7 +138,7 @@ class User:
         
         # Check if the message quality is 0 and increment suspension strike count
         if message_created.quality == 0:
-            self.sus_strike_count += 1
+            self.bad_message_posting = True
         
         self.post_counter += 1
         return message_created

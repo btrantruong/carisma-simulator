@@ -39,11 +39,14 @@ def run_agent_pool_manager(
 
         dispatch_requests = []
 
+        # Filter out suspended or terminated users
+        active_user_packs = [user_pack for user_pack in user_packs_batch if not (user_pack[0].is_suspended or user_pack[0].is_terminated)]
+
         # Dispatch all the agent packs
-        while user_packs_batch:
+        while active_user_packs:
 
             # Pick agent pack from the batch
-            user_pack = user_packs_batch.pop()
+            user_pack = active_user_packs.pop()
 
             # Pick handler at random with replacement
             handler_rank = rnd.choice(agent_handlers_ranks)
