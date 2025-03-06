@@ -136,8 +136,8 @@ class User:
         )
         # self.shared_messages.append(message_created)
         
-        # Check if the message quality is 0 and increment suspension strike count
-        if message_created.quality == 0:
+        # Check if the message quality is 0 and increment suspension strike count --> having 0.3 for testing
+        if message_created.quality < 0.1:
             self.bad_message_posting = True
         
         self.post_counter += 1

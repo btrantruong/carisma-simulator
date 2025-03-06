@@ -121,11 +121,19 @@ def main():
         )
 
     elif rank == RANK_INDEX["agent_pool_manager"]:
-        run_agent_pool_manager(
-            comm_world=comm_world, rank=rank, size=size, rank_index=RANK_INDEX
-        )
+        print(f"Agent pool manager should start @ rank: {rank}", flush=True)
+
+        try:
+            print(f"Before calling run_agent_pool_manager @ rank: {rank}", flush=True)  # NEW DEBUG LINE
+            run_agent_pool_manager(
+                comm_world=comm_world, rank=rank, size=size, rank_index=RANK_INDEX
+            )
+            print(f"Agent pool manager finished @ rank: {rank}", flush=True)
+        except Exception as e:
+            print(f"Error in Agent Pool Manager @ rank {rank}: {e}", flush=True)
 
     elif rank >= RANK_INDEX["agent_handler"]:
+        print(f"Rank {rank} starting agent process. Total MPI processes: {size}", flush=True)
         run_agent(comm_world=comm_world, rank=rank, size=size, rank_index=RANK_INDEX)
 
 

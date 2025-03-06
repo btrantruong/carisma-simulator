@@ -1,7 +1,7 @@
 from mpi4py import MPI
 import time
 
-def suspension(user, user_packs_batch, current_time):
+def suspension(user, users_packs_batch, current_time):
     """
     Handles user suspension and removes their messages from others' newsfeeds.
 
@@ -39,10 +39,10 @@ def suspension(user, user_packs_batch, current_time):
             user.newsfeed = []
 
         # **Remove suspended user’s messages from other users' newsfeeds**
-        for other_user, _, _ in user_packs_batch:
+        for other_user, _, _ in users_packs_batch:
             if hasattr(other_user, "newsfeed"):
                 other_user.newsfeed = [
-                    msg for msg in other_user.newsfeed if msg.author_id != user.uid
+                    msg for msg in other_user.newsfeed if msg.uid != user.uid
                 ]
 
         # Check for account termination
@@ -67,28 +67,33 @@ def run_policy_filter(
     while True:
 
         # Wait for a batch of (agents, in_messages) to process
-        user_packs_batch = comm_world.recv(
+        print(f"Policy filter @ rank {rank} waiting for batch from data manager", flush=True)
+        users_packs_batch = comm_world.recv(
             source=rank_index["data_manager"], status=status
         )
+        print(f"Policy filter @ rank {rank} received batch", flush=True)
 
         # Check for termination signal
-        if user_packs_batch == "sigterm":
+        if users_packs_batch == "sigterm":
             comm_world.send("sigterm", dest=rank_index["agent_pool_manager"])
             break
         
         # Process each user pack
-        for i, user_pack in enumerate(user_packs_batch):
+        for i, user_pack in enumerate(users_packs_batch):
             user, in_messages, current_time = user_pack
 
             # Apply suspension logic using the batch itself
-            suspension(user, user_packs_batch, current_time)
+            suspension(user, users_packs_batch, current_time)
+            # Debugging the user object after suspension
+            print(f"Updated user {user.uid} with suspension: {user.is_suspended}")
 
             # Update the user pack
-            user_packs_batch[i] = (user, in_messages, current_time)
+            users_packs_batch[i] = (user, in_messages, current_time)
 
-        processed_batch = user_packs_batch
+        processed_batch = users_packs_batch
 
         # Redirect the processed batch to agent pool manager
-        comm_world.send(processed_batch, dest=rank_index["agent_pool_manager"])
+        print(f"Sending batch from policy filter @ rank {rank}", flush=True)
+        comm_world.isend(processed_batch, dest=rank_index["agent_pool_manager"])
 
     print(f"Policy filter stop @ rank: {rank}")

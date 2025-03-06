@@ -20,21 +20,28 @@ def run_agent(
     status = MPI.Status()
 
     # Bootstrap sync
+    print(f"Agent handler start @ rank: {rank}. Waiting at Barrier...", flush=True)
     comm_world.Barrier()
-
+    print(f"Agent handler passed Barrier @ rank: {rank}", flush=True)
+    
     while True:
         # Receive package that contains (friend ids, messages) from agent_pool_manager
         # Wait for agent pack to process
+        print(f"Agent @ rank {rank} waiting for user pack...")
         user_pack = comm_world.recv(
             source=rank_index["agent_pool_manager"],
             status=status,
         )
-
+        print(f"Agent @ rank {rank} received user pack")
         if user_pack == "sigterm":
             break
 
-        # Unpack the agent + incoming messages
-        user, in_messages = user_pack  # in_messages: inventory
+        # Ensure backward compatibility with older user_packs
+        if len(user_pack) == 2:
+            user, in_messages = user_pack
+            current_time = None  # Default value if not included
+        else:
+            user, in_messages, current_time = user_pack
 
         # Keep track of the weight of the messages (if a message should appear more than one, it has more weight)
         weight_dict = {}

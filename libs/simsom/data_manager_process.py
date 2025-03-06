@@ -156,10 +156,12 @@ def run_data_manager(
                     incoming_messages[picked_user.uid] = []
 
                 # Non blocking send the batch to the policy_filter
+                print(f"Data manager @ rank 0 sent batch at time {clock.current_time}", flush=True)
                 batch_send_req = comm_world.isend(
                     users_packs_batch,
                     dest=rank_index["policy_filter"],
                 )
+                #print(f"Data manager @ rank 0 sent batch at time {users_packs_batch}", flush=True)
 
             # Handlers harvesting
             returned_users = 0
