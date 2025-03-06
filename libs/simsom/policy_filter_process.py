@@ -56,8 +56,6 @@ def run_policy_filter(
     rank_index: dict,
 ):
 
-    print("Policy filter start")
-
     # Status of the processes
     status = MPI.Status()
 
