@@ -18,6 +18,7 @@ class User:
         post_per_day: float,
         friends: list = [],
         followers: list = [],
+        interests: list = [0, 0, 0, 0, 0],
     ):
         self.uid = uid
         self.followers = followers
@@ -32,10 +33,7 @@ class User:
         self.post_counter = 0
         self.repost_counter = 0
         self.view_counter = 0
-        user_description = []
-        for _ in range(random.randrange(1, 6)):
-            user_description.append(random.randrange(0, 5))
-        self.user_description = list(set(user_description))
+        self.interests = interests
         self.is_suspended = False
         self.is_shadow = False
         self.mu = 0.5
@@ -90,7 +88,7 @@ class User:
             mid="R" + str(self.repost_counter) + "_" + str(self.uid),
             uid=self.uid,
             quality_params=None,
-            topic=target.topic,
+            topics=target.topics,
             is_shadow=self.is_shadow,
             exposure=target.exposure,
         )
@@ -124,7 +122,7 @@ class User:
         message_created = Message(
             mid="P" + str(self.post_counter) + "_" + str(self.uid),
             uid=self.uid,
-            topic=random.choice(self.user_description),
+            topics=self.interests,
             is_shadow=self.is_shadow,
             quality_params=self.quality_params,
         )
@@ -145,6 +143,6 @@ class User:
                 f"- Feed: {self.newsfeed}",
                 f"- Friends: {self.friends}",
                 f"- Followers: {self.followers}",
-                f"- Description: {self.user_description}",
+                # f"- Description: {self.user_description}",
             ]
         )

@@ -12,16 +12,16 @@ from action import Action
 class Message(Action):
     def __init__(
         self,
-        mid: int,
-        uid: int,
+        mid: str,
+        uid: str,
         quality_params: tuple,
-        topic: int,
+        topics: list,
         is_shadow: bool,
         exposure: list = [],
     ) -> None:
         Action.__init__(self, mid, uid)
         self.quality_params = quality_params
-        self.topic = topic
+        self.topics = topics
         self.is_shadow = is_shadow
         self.exposure = exposure
         self.appeal = self.appeal_func()
@@ -105,7 +105,7 @@ class Message(Action):
                 f"- Quality parameters: {self.quality_params}",
                 f"- Quality: {self.quality}",
                 f"- Time: {self.time}",
-                f"- Topic: {self.topic}",
+                # f"- Topic: {self.topic}",
             ]
         )
 
