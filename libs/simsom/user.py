@@ -46,8 +46,14 @@ class User:
         self.repost_counter = 0
         self.view_counter = 0
         self.user_topics = generate_user_topics()
-        self.is_suspended = False
+        self.bad_message_posting = False #Trait to track bad activities of users
+        self.strike_timestamps = [] #object to track timestamps
+        self.sus_strike_count = 0 #to track the strike counts
+        self.suspension_lift_time = 0 #timeout for current suspension
+        self.is_suspended = False #Indicator for suspension
+        self.is_terminated = False #indicator for termination
         self.is_shadow = False
+        self.no_bad_posting = False #indicator of permanent transformation of user behavior not to post bad messages
         self.mu = 0.5
 
     def make_actions(self) -> None:
@@ -139,6 +145,15 @@ class User:
             quality_params=self.quality_params,
         )
         # self.shared_messages.append(message_created)
+    
+        # If the user has changed behavior based on suspension_abrupt, prevent bad messages from being posted
+        if self.no_bad_posting and message_created.quality == 0:
+            message_created.quality = round(random.uniform(0.1, 0.5), 3) # Override the quality to something non-zero (e.g., low quality but not 0)
+            
+        # Check if the message quality is 0 and update bad_message_posting
+        if message_created.quality == 0:
+            self.bad_message_posting = True
+            
         self.post_counter += 1
         return message_created
 
